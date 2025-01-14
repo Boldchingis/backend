@@ -10,17 +10,42 @@ app.use(express.json());
 
 configDotenv();
 let cluster = null;
-const connectMongoDb = async () => {
+const connectMongoDB = async () => {
   const MONGO_URI = process.env.MONGODB_URI;
   await mongoose.connect(MONGO_URI);
   console.log("done");
 };
 
-connectMongoDb();
-
+connectMongoDB();
+const FOOD_CATEGORY_SCHEMA = new mongoose.Schema(
+  {
+FoodName: String,
+Price: Number,
+Rating: Number
+  },
+   {
+    Timestamps: true
+  }
+)
+const FoodCategoryModel = mongoose.model(
+  "FoodCategory",
+  FOOD_CATEGORY_SCHEMA,
+  "food-category"
+)
 app.get("/", async (req: Request, res: Response) => {
-  res.send("hello");
+  const FoodCategories = await FoodCategoryModel.find();
+  res.json(FoodCategories);
 });
+app.get("/create", async (req: Request, res: Response) => {
+    const newItem = await FoodCategoryModel.create({
+      foodName: "New food name is created successfully."
+    });
+    res.send({
+      message: "New food name is created successfully.",
+      newItem 
+    });
+});
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
