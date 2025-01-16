@@ -1,7 +1,8 @@
 import { configDotenv } from "dotenv";
 import express, { Request, Response } from "express";
 import { mongo } from "mongoose";
-import { foodCategoryRouter } from "./router/food-category"
+import { foodCategoryRouter } from "./router/food-category";
+import { foodRouter } from "./router/food";
 const cors = require("cors");
 const mongoose = require("mongoose");
 
@@ -25,11 +26,9 @@ const connectMongoDb = async () => {
 
 connectMongoDb();
 
-
-
-
-
-app.use("/food-category",foodCategoryRouter)
+app.use("/food-category/", foodCategoryRouter);
+app.use("food/", foodRouter);
+app.use("/order/", foodCategoryRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

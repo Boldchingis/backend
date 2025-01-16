@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
-import {FoodCategoryModel} from "../schmea/food-category";
+import { FoodCategoryModel } from "../schmea/food-category";
 
-export const foodCategoryRouter = Router()
+export const foodCategoryRouter = Router();
 
 foodCategoryRouter.get("/", async (req: Request, res: Response) => {
   const foodCategories = await FoodCategoryModel.find();
@@ -17,10 +17,9 @@ foodCategoryRouter.post("/", async (req: Request, res: Response) => {
   });
 });
 
-foodCategoryRouter.delete("/", async (req: Request, res: Response) => {
-  const categoryJson = await FoodCategoryModel.findByIdAndDelete(req.params.id
-  );
-  res.send("Ene ustgagdsan shit");
+foodCategoryRouter.delete("/:id", async (req: Request, res: Response) => {
+  const categoryJson = await FoodCategoryModel.findByIdAndDelete(req.params.id);
+  res.send("deleted lol");
   res.json(categoryJson);
 });
 
