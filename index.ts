@@ -5,6 +5,8 @@ const mongoose = require("mongoose");
 
 const PORT = 5006;
 const app = express();
+const cors = require('cors');
+app.use(cors()); 
 
 app.use(express.json());
 
@@ -19,56 +21,53 @@ const connectMongoDB = async () => {
 connectMongoDB();
 const FOOD_CATEGORY_SCHEMA = new mongoose.Schema(
   {
-    CategoryName: String,
-    FoodName: String,
+    categoryName: String,  
   },
   {
-    Timestamps: true,
+    timestamps: true,  
   }
 );
+
 const FoodCategoryModel = mongoose.model(
   "FoodCategory",
   FOOD_CATEGORY_SCHEMA,
   "food_category"
 );
 
-const collection = mongoose.model("food_category", FOOD_CATEGORY_SCHEMA),
-  data = {
-    CategoryName: "4 hool",
-    FoodName: "zagastai shol",
-  };
-collection.insertMany(data);
-
-app.put("/food-category/;id", async (req: Request, res: Response) => {
-  res.json({
-    message: "One food category is created.",
-  });
+app.put("/food-category/:id", async (req: Request, res: Response) => {
+ const updatedItem = await FoodCategoryModel.findByIdAndUpdate(
+  req.params.id,
+  {
+    categoryName: req.body.categoryName,
+  },
+  {new: true}
+ );
+ res.json(
+ updatedItem)
 });
 
-// app.delete("/food-category/:id", async (req: Request, res: Response) => {
-//   FoodCategoryModel.collection("food-category").deleteOne(
-//     { id: parseInt(req.params.id) },
-//     (error, result) => {
-//       if (error) throw error;
-//       res.send("Item is deleted");
-//     }
-//   );
-// });
 app.delete("/food-category/:id", async (req: Request, res: Response) => {
-  const foot = await FoodCategoryModel.findByIdAndDelete(req.params.id);
-  res.send("ustlaa");
+  const deletedItem = await FoodCategoryModel.findByIdAndDelete(req.params.id);
+  res.json(deletedItem);
+});
+app.get("/food-category/:id", (req: Request, res: Response) => {
+  FoodCategoryModel.findById(req.params.id)
+  .then((category:null) => { 
+    if (!category) {
+      return res.json({ message: "Category not found" });
+    }
+    res.json(category); 
+  })
 });
 
-app.get("/", async (req: Request, res: Response) => {
-  const FoodCategories = await FoodCategoryModel.find();
-  res.json(FoodCategories);
-});
+
+
 
 app.post("/", async (req: Request, res: Response) => {
   const newItem = await FoodCategoryModel.create({
-    foodName: "New category name is created successfully.",
+    categoryName:req.body.categoryName,
   });
-  res.send({
+  res.json({
     message: "New category name is created successfully.",
     newItem,
   });
