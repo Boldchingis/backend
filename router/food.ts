@@ -11,10 +11,5 @@ const FOOD_SCHEMA = new Schema(
   { timestamps: true }
 );
 
-export const foodRouter = Router();
-foodRouter.get("/", async (req, res) => {
-  const foodModel = model("Food", FOOD_SCHEMA, "food")
-  res.send({
-    message: "hool nemegdlee ",
-  });
-});
+const foodModel = model("Food", FOOD_SCHEMA, "food");
+export { foodModel };
