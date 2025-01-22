@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { FoodCategoryModel } from "../schmea/food-category";
+import { FoodCategoryModel } from "../models/food-category";
 
 export const foodCategoryRouter = Router();
 
@@ -18,9 +18,9 @@ foodCategoryRouter.post("/", async (req: Request, res: Response) => {
 });
 
 foodCategoryRouter.delete("/:id", async (req: Request, res: Response) => {
-  const categoryJson = await FoodCategoryModel.findByIdAndDelete(req.params.id);
-  res.send("deleted lol");
-  res.json(categoryJson);
+  const deleteId = req.params.id.trim();
+  const categoryJson = await FoodCategoryModel.findByIdAndDelete(deleteId);
+  res.send("Deleted category ");
 });
 
 foodCategoryRouter.put("/:id", async (req: Request, res: Response) => {
