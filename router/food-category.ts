@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { FoodCategoryModel } from "../schmea/food-category";
+import { FoodCategoryModel } from "../Schmea/food-category";
 
 export const foodCategoryRouter = Router();
 
