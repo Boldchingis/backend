@@ -4,37 +4,41 @@ import { FoodModel } from "../models/food";
 export const foodRouter = Router();
 
 foodRouter.get("/", async (req: Request, res: Response) => {
-  const foodCategories = await FoodModel.find();
-  res.json(foodCategories);
-});
-foodRouter.post("/", async (req: Request, res: Response) => {
-  const newItem = await FoodModel.create({
-    foodName: req.body.foodName,
-    image: req.body.image,
-    price: req.body.price,
-    ingredients: req.body.ingredients,
-  });
-  res.send(newItem);
+  const food = await FoodModel.find();
+  res.send(food);
 });
 
-foodRouter.delete("/", async (req: Request, res: Response) => {
-  const deleteId = req.body.id;
-  const categoryJson = await FoodModel.findByIdAndDelete(deleteId);
-  res.send("deleted");
-  res.json(categoryJson);
+foodRouter.get("/:id", async (req: Request, res: Response) => {
+  const id = req.params;
+  const item = await FoodModel.find({ _id: id });
+  res.send(item);
+});
+
+foodRouter.post("/", async (req: Request, res: Response) => {
+  const { body } = req;
+  const newFood = await FoodModel.create({ ...body });
+
+  res.json(newFood);
 });
 
 foodRouter.put("/:id", async (req: Request, res: Response) => {
-  const updateId = req.params.id.trim();
-  const updated = await FoodModel.findByIdAndUpdate(
-    updateId,
-    {
-      foodName: req.body.foodName,
-      image: req.body.image,
-      price: req.body.price,
-      ingredients: "req.body.ingredients",
-    },
+  const { params, body } = req;
+  const foodId = params.id;
+  const item = await FoodModel.find({ _id: foodId });
+  const updatedItem = await FoodModel.findByIdAndUpdate(
+    foodId,
+    { ...body },
     { new: true }
   );
-  res.json(updated);
+
+  res.json(updatedItem);
 });
+
+foodRouter.delete(
+  "/:id",
+  async (req: Request<{ id: string }>, res: Response) => {
+    const foodId = req.params.id;
+    const deletedFood = await FoodModel.findByIdAndDelete(foodId);
+    res.send("Deleted this item: " + deletedFood);
+  }
+);

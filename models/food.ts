@@ -2,15 +2,20 @@ import { model, Schema } from "mongoose";
 
 const FOOD_SCHEMA = new Schema(
   {
-    foodName: String,
-    image: String,
+    name: String,
     price: Number,
-    ingredients: String,    
-    category: Schema.Types.ObjectId,
+    ingredients: String,
+    image: String,
+    category: {
+      type: Schema.Types.ObjectId,
+      ref: "FoodCategory",
+    },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
-const FoodModel = model("Food", FOOD_SCHEMA, "food");
+const FoodModel = model("food", FOOD_SCHEMA, "food");
 
 export { FoodModel };
