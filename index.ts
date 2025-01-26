@@ -28,6 +28,10 @@ connectMongoDb();
 
 app.use("/food-category", foodCategoryRouter);
 app.use("/food", foodRouter);
+app.use("/categories", (req, res)=>{
+ const token =  req.get("authorization");
+ console.log(token); 
+})
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
