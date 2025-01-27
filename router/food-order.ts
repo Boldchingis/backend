@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import { FoodOrderModel } from "../models/food-order";
-
+import { CustomRequest } from "./types";
 export const FoodOrderRouter = Router();
 
 FoodOrderRouter.get("/", async (req: Request, res: Response) => {
@@ -15,8 +15,10 @@ FoodOrderRouter.get("/:id", async (req: Request, res: Response) => {
 });
 
 FoodOrderRouter.post("/", async (req: Request, res: Response) => {
-  const user = req?.userId;
+  const customReq = req as unknown as CustomRequest;
+  const user = customReq?.userId;
   const { foodOrderItems, totalPrice } = req.body;
+  const order = {user, foodOrderItems, totalPrice};
   const newOrder = await FoodOrderModel.create(order);
   res.json(newOrder);
 });
